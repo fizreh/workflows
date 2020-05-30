@@ -1,0 +1,55 @@
+name: Greet Everyone
+# This workflow is triggered on pushes to the repository.
+on: [push]
+
+jobs:
+  build:
+    # Job name is Greeting
+    name: Greeting
+    # This job runs on Linux
+    runs-on: ubuntu-latest
+    steps:
+      # This step uses GitHub's hello-world-javascript-action: https://github.com/actions/hello-world-javascript-action
+      - name: Hello world
+        uses: actions/hello-world-javascript-action@v1
+        with:
+          who-to-greet: 'Mona the Octocat'
+        id: hello
+      # This step prints an output (time) from the previous step's action.
+      - name: Echo the greeting's time
+        run: echo 'The time was ${{ steps.hello.outputs.time }}.'
+Note: Ensure that you only commit valid workflow files to your repository. If .github/workflows contains an invalid workflow file, GitHub Actions generates a failed workflow run for every new commit.
+
+Triggering a workflow with events
+You can configure a workflow to start once:
+
+An event on GitHub occurs, such as when someone pushes a commit to a repository or when an issue or pull request is created.
+A scheduled event begins.
+An external event occurs.
+To trigger a workflow after an event happens on GitHub, add on: and an event value after the workflow name. For example, this workflow is triggered when changes are pushed to any branch in the repository.
+
+name: descriptive-workflow-name
+on: push
+To schedule a workflow, you can use the POSIX cron syntax in your workflow file. The shortest interval you can run scheduled workflows is once every 5 minutes. For example, this workflow is triggered every hour.
+
+on:
+  schedule:
+    - cron:  '0 * * * *'
+To trigger a workflow after an external event occurs, you can invoke a repository_dispatch webhook event by calling the "Create a repository dispatch event" REST API endpoint. For more information, see "Create a repository dispatch event" in the GitHub Developer documentation.
+
+For more information and examples, see "Events that trigger workflows."
+
+Filtering for specific branches, tags, and paths
+You can set up your workflow to run only on certain branches.
+
+For example, this workflow runs when a push that includes files in the test directory is made on the master branch, or pushes to the v1 tag.
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v1
+    # file paths to consider in the event. Optional; defaults to all.
+    paths:
+      - 'test/*'
